@@ -1,84 +1,90 @@
-# Justice Workforce Pathways
+# Training Justice Diagnostics
 
-A reproducible **synthetic longitudinal mixed-methods research prototype** for studying how acute critical-incident exposure and chronic organizational stress jointly shape mental health, help-seeking, and retention in justice-system personnel.
+A reproducible **synthetic longitudinal police-training evaluation prototype** connecting organizational justice, supervisor support, training motivation, training receptivity, implementation fidelity, and transfer to behavioral-health crisis scenarios.
 
-> **Synthetic-data notice:** Every participant, facility, interview excerpt, event, and result in this repository is simulated. Nothing here is a real officer record or empirical finding.
+> **Synthetic-data notice:** Every officer, cohort, interview excerpt, administrative indicator, scenario result, and coefficient in this repository is simulated. Nothing here is an empirical finding about any real police organization.
 
-![Study design](figures/01_study_design.svg)
+![Study architecture](figures/01_study_architecture.svg)
 
-## Research questions
+## Why this project exists
+Police training research increasingly asks not only **whether training works**, but **how, why, for whom, and under what organizational conditions it works or fails**. This prototype turns that idea into a fully reproducible workflow.
 
-1. Do chronic organizational stressors predict distress beyond acute critical-incident exposure?
-2. Does supervisor/peer support buffer the association between organizational stress and distress?
-3. Do help-seeking stigma and support help explain later well-being?
-4. Can administrative indicators (overtime, sick leave, critical incidents) add information beyond self-report?
-5. Which qualitative themes co-occur with higher distress and lower help-seeking?
-6. Which factors predict workforce turnover over follow-up?
+It links three questions that are often analyzed separately:
 
-## Design
+1. **Fairness and readiness:** Do organizational justice, supervisor support, self-efficacy, and locus of control shape motivation to train?
+2. **Receptivity and transfer:** Do motivated and receptive trainees show better later scenario performance—and does organizational context change that pathway?
+3. **Diagnosis before reform:** If performance problems remain, are they agency-wide or concentrated within particular cohorts, units, or behavioral-health scenarios?
 
-- **N = 420** synthetic justice-system personnel across **28 facilities/units**.
-- **Four waves**: entry/baseline, 12, 24, and 36 months.
-- Repeated self-report measures plus linked synthetic administrative/personnel indicators.
-- Synthetic semi-structured interview excerpts at waves 2 and 4.
-- Planned attrition and turnover are modeled explicitly rather than deleted silently.
+## Synthetic design
+- **N = 480** synthetic officers/recruits.
+- **24 training cohorts** nested in **8 units**.
+- Cohort-level training vs wait-list comparison.
+- **3 waves:** baseline, immediate post-training, six-month follow-up.
+- Linked survey, workload/administrative, behavioral scenario, and interview streams.
+- Behavioral-health scenarios include suicidal crisis, psychosis, youth crisis, and cognitive disability.
 
 ## Analysis stack
-
-The project deliberately uses methods suited to clustered longitudinal workforce data:
-
-- descriptive trajectories and facility-level variation;
-- **GEE panel models** for repeated distress outcomes, including an organizational stress × supervisor-support interaction;
-- organizational stress × supervisor-support moderation visualization;
-- **lagged panel prediction** of later distress and help-seeking;
-- **discrete-time repeated-binary turnover model** using post-baseline risk intervals and person-wave administrative data;
-- structured qualitative coding and mixed-methods joint displays.
-
-These choices reflect a research tradition that combines longitudinal interviews/surveys, organizational context, personnel/administrative information, and qualitative inquiry in correctional and justice-workforce well-being research. The repository is an independent methodological prototype, not a reproduction of any specific dataset.
+- standardized baseline balance diagnostics;
+- robust OLS model of **training motivation**;
+- robust OLS model of **training receptivity**, including organizational justice × gender moderation;
+- longitudinal **GEE / difference-in-differences-style** training-effect model;
+- temporal pathway model: motivation → receptivity → follow-up skill;
+- **1,000-replicate bootstrap indirect effects** for motivation/justice → receptivity → transfer;
+- repeated-scenario GEE transfer model;
+- **problem-oriented concentration diagnostics** across cohorts, units, and scenario types;
+- implementation-fidelity analysis;
+- transparent qualitative coding and mixed-method interpretation;
+- automated tests plus multi-seed simulation stress testing.
 
 ## Key synthetic outputs
 
-![Trajectories](figures/02_longitudinal_trajectories.svg)
+![Training trajectories](figures/02_training_trajectories.svg)
 
-![Interaction](figures/03_stress_support_interaction.svg)
+![Justice and receptivity](figures/03_justice_gender_receptivity.svg)
 
-![Themes](figures/04_qualitative_themes.svg)
+![Implementation fidelity](figures/04_fidelity_transfer.svg)
 
-![Retention](figures/05_retention_curve.svg)
+![Diagnostic concentration](figures/05_diagnostic_concentration.svg)
+
+![Implementation themes](figures/06_implementation_themes.svg)
+
+![Scenario transfer](figures/07_scenario_transfer.svg)
+
+![Bootstrapped pathways](figures/08_bootstrap_pathways.svg)
 
 ## Reproduce
-
 ```bash
 python -m pip install -r requirements.txt
 python scripts/run_all.py
 pytest -q
+python scripts/stress_test.py --start 1 --count 100
 ```
 
-`run_all.py` regenerates the cohort from a fixed seed, validates the data, runs the quantitative and qualitative analyses, writes result tables, and regenerates all five SVG figures.
+`run_all.py` regenerates all synthetic datasets from a fixed seed, validates them, runs every quantitative and qualitative analysis, and regenerates all eight SVG figures.
+
+## Methodological lineage
+The project is an independent prototype, but its architecture is grounded in published police-research methods: longitudinal models of training motivation/receptivity/outcomes; organizational-justice theory; randomized and difference-in-differences training/intervention evaluation; mixed-method implementation analysis; and problem-oriented diagnosis of whether problems are diffuse or concentrated before reform is selected.
+
+See [`docs/METHODS.md`](docs/METHODS.md) for the detailed methodological mapping and interpretation boundaries.
 
 ## Repository structure
-
 ```text
-justice-workforce-pathways/
+training-justice-diagnostics/
 ├── scripts/
 │   ├── generate_synthetic_data.py
 │   ├── validate_data.py
 │   ├── analyze_quantitative.py
 │   ├── analyze_qualitative.py
 │   ├── make_figures.py
-│   └── run_all.py
-├── tests/
-│   └── test_pipeline.py
+│   ├── run_all.py
+│   └── stress_test.py
+├── tests/test_pipeline.py
 ├── docs/
-│   ├── METHODS.md
-│   ├── DATA_DICTIONARY.md
-│   └── INTERPRETATION.md
-├── figures/
+├── data/demo/
 ├── results/
-├── .github/workflows/ci.yml
-└── README.md
+├── figures/
+└── .github/workflows/ci.yml
 ```
 
 ## Interpretation boundary
-
-This repository demonstrates **research design and analytic implementation**. Synthetic coefficients must never be cited as evidence about real correctional officers, police officers, agencies, or mental-health outcomes.
+This repository demonstrates **research design, diagnostics, and analytic implementation**. Synthetic coefficients must never be cited as evidence about real police officers, gender groups, agencies, or training programs.

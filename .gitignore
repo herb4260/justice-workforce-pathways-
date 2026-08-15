@@ -1,5 +1,7 @@
-data/generated/
-results/generated/
 __pycache__/
 .pytest_cache/
 *.pyc
+.DS_Store
+data/demo/*.csv
+results/*.csv
+figures/pngcheck/
